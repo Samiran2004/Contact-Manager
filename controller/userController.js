@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
+
+//@route:- POST   /api/user/register
 const registerUser = (async (req, res) => {
     const {
         firstname,
@@ -19,10 +22,11 @@ const registerUser = (async (req, res) => {
             const hashedPassword = await bcrypt.hash(password, 10);
             try {
                 const createdUser = await User.create({ firstname: firstname, lastname: lastname, email: email, password: hashedPassword });
+                const newUser = { _id: createdUser._id, firstname: createdUser.firstname, lastname: createdUser.lastname, email: createdUser.email };
                 res.status(201).send({
                     status: "Success",
                     message: "New user created.",
-                    data: createdUser
+                    data: newUser
                 });
             } catch (error) {
                 res.status(400).send({
@@ -39,12 +43,43 @@ const registerUser = (async (req, res) => {
     }
 });
 
+//@route:- POST  /api/user/login
 const loginUser = (async (req, res) => {
-    res.status(200).send("Login User");
+    const { email, password } = req.body;
+    if (!email || !password) {
+        res.status(400).send({
+            status: "Failed",
+            message: "All feilds are required."
+        });
+    } else {
+        const checkUser = await User.findOne({ email: email });
+        if (!checkUser) {
+            res.status(404).send({
+                status: "Failed",
+                message: "User not found in database."
+            });
+        } else {
+            const checkPassword = await bcrypt.compare(password, checkUser.password);
+            if (checkPassword == true) {
+                const token = jwt.sign({ id: checkUser._id, firstname: checkUser.firstname, lastname: checkUser.lastname, email: checkUser.email }, process.env.JWT_KEY, { expiresIn: "10m" });
+                res.status(200).send({
+                    token
+                });
+            } else {
+                res.status(404).send({
+                    status: "Failed",
+                    message: "Invalid Password."
+                });
+            }
+        }
+    }
 });
 
 const currentUser = (async (req, res) => {
-    res.status(200).send("Current user.");
+    res.status(200).send({
+        status:"Success",
+        data: req.user
+    });
 });
 
 module.exports = {

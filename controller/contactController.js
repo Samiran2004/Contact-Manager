@@ -12,6 +12,7 @@ const createContact = async (req, res) => {
         const check = await Contact.findOne({ $or: [{ email: email }, { phonenumber: phonenumber }] });
         if (!check) {
             const newContact = await Contact.create({
+                user: req.user.id,
                 name: name,
                 email: email,
                 phonenumber: phonenumber
@@ -33,7 +34,7 @@ const createContact = async (req, res) => {
 
 const getAllContacts = (async (req, res) => {
     try {
-        const allContatcs = await Contact.find();
+        const allContatcs = await Contact.find({user: req.user.id});
         res.status(200).send(allContatcs);
     } catch (error) {
         res.status(500).send({
