@@ -34,7 +34,7 @@ const createContact = async (req, res) => {
 
 const getAllContacts = (async (req, res) => {
     try {
-        const allContatcs = await Contact.find({user: req.user.id});
+        const allContatcs = await Contact.find({ user: req.user.id });
         res.status(200).send(allContatcs);
     } catch (error) {
         res.status(500).send({
@@ -68,12 +68,19 @@ const updateContact = (async (req, res) => {
                 message: "Contact with the provided id is not exists."
             });
         } else {
-            const updatedContact = await Contact.findByIdAndUpdate(req.params.id, req.body, { new: true });
-            res.status(201).send({
-                status: "Success",
-                message: "Contact updated",
-                updatedContactData: updatedContact
-            });
+            if (check.user.toString() !== req.user.id) {
+                res.status(401).send({
+                    status: "Failed",
+                    message: "Not a authorize user"
+                })
+            } else {
+                const updatedContact = await Contact.findByIdAndUpdate(req.params.id, req.body, { new: true });
+                res.status(201).send({
+                    status: "Success",
+                    message: "Contact updated",
+                    updatedContactData: updatedContact
+                });
+            }
         }
     } catch (error) {
         res.status(301).send({
@@ -83,20 +90,27 @@ const updateContact = (async (req, res) => {
     }
 });
 
-const deleteContact = (async(req, res) => {
+const deleteContact = (async (req, res) => {
     const check = await Contact.findById(req.params.id);
-    if(!check){
+    if (!check) {
         res.status(301).send({
             status: "Failed",
             message: "Contact with the provided id is not exists."
         });
-    }else{
-        const deletedContact = await Contact.findByIdAndDelete(req.params.id);
-        res.status(200).send({
-            status:"Success",
-            message:"Success",
-            deleteContactData: deletedContact
-        });
+    } else {
+        if (check.user.toString() !== req.user.id) {
+            res.status(401).send({
+                status: "Failed",
+                message: "Not a authorize user"
+            })
+        } else {
+            const deletedContact = await Contact.findByIdAndDelete(req.params.id);
+            res.status(200).send({
+                status: "Success",
+                message: "Success",
+                deleteContactData: deletedContact
+            });
+        }
     }
 });
 
