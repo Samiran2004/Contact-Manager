@@ -26,9 +26,9 @@ This is a Contact Manager Backend Project
 - Get a contact by contact id
 - Update a contact
 - Delete a contact
-- SignUp a user
-- Login a user
-- View current user detials
+- SignUp a user (https://contact-manager-ucw4.onrender.com/api/user/register)
+- Login a user  (https://contact-manager-ucw4.onrender.com/api/user/login)
+- View current user detials (https://contact-manager-ucw4.onrender.com/api/user/current-user-detials)
 ## Environment Variables
 
 To run this project, you will need to add the following environment variables to your .env file
