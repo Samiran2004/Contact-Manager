@@ -21,11 +21,11 @@ This is a Contact Manager Backend Project
 - [@linkdin](www.linkedin.com/in/samiransamanta)
 ## Features
 
-- Create a new contact
-- Get all contacts
-- Get a contact by contact id
-- Update a contact
-- Delete a contact
+- Create a new contact (https://contact-manager-ucw4.onrender.com/api/contacts/create-contact)
+- Get all contacts (https://contact-manager-ucw4.onrender.com/api/contacts/get-all-contacts)
+- Get a contact by contact id (https://contact-manager-ucw4.onrender.com/api/contacts/:id)
+- Update a contact (https://contact-manager-ucw4.onrender.com/api/contacts/update/:id)
+- Delete a contact (https://contact-manager-ucw4.onrender.com/api/contacts/delete/:id)
 - SignUp a user (https://contact-manager-ucw4.onrender.com/api/user/register)
 - Login a user  (https://contact-manager-ucw4.onrender.com/api/user/login)
 - View current user detials (https://contact-manager-ucw4.onrender.com/api/user/current-user-detials)
@@ -37,3 +37,6 @@ To run this project, you will need to add the following environment variables to
 
 `DATABASE_URI`
 
+`JWT_KEY`
+
+`SALT_ROUND`
